@@ -10,6 +10,28 @@ window.onload = defineCalendar(nowYear, currentMonth + 1);
 const userPlanString = localStorage.getItem(`userPlan`);
 let userPlanObj = JSON.parse(userPlanString) || [];
 
+function isPlanAddModalVisible(state) {
+  const modalDisplay = document.getElementById("plan-add-modal-wrap");
+  const planColor = document.getElementById("plan-color");
+  const planTitle = document.getElementById("title-txt");
+  const planSubject = document.getElementById("subject");
+  const planTimeStart = document.getElementById("time-start");
+  const planTimeEnd = document.getElementById("time-end");
+  const planLocation = document.getElementById("location-input");
+
+  if (state) {
+    modalDisplay.style.display = "flex";
+  } else {
+    modalDisplay.style.display = "none";
+    planColor.value = "";
+    planTitle.value = "";
+    planSubject.value = "";
+    planTimeStart.value = "";
+    planTimeEnd.value = "";
+    planLocation.value = "";
+  }
+}
+
 // 일정 가시화
 function refreshCalPlan() {
   const lastDay = new Date(nowYear, currentMonth + 1, 0).getDate(); // 해당 월의 마지막 날
@@ -34,6 +56,8 @@ function refreshCalPlan() {
     for (var index = 0; index < userPlanObj.length; index++) {
       const planStart = new Date(userPlanObj[index].planTimeStart);
       const planEnd = new Date(userPlanObj[index].planTimeEnd);
+      planStart.setHours(0, 0, 0, 0);
+      planEnd.setHours(0, 0, 0, 0);
 
       if (nowDate >= planStart && nowDate <= planEnd) {
         const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
@@ -49,9 +73,15 @@ function refreshCalPlan() {
  * @param {number} month 클릭한 대상의 달
  * @param {number} date 클릭한 대상의 일자
  */
-function getEvent(year, month, date) {
+function getPlan(year, month, date) {
   const lastDay = new Date(year, month + 1, 0).getDate(); // 해당 월의 마지막 날
+  const selectedDate = new Date(year, month, date);
   const targetDateDiv = document.getElementById(`date-${date}`); // 클릭한 요소 DOM 객체 가져오기
+  const planListUl = document.getElementById("plan-list");
+  const selectDateLable = document.getElementById("select-date-lable");
+
+  planListUl.innerHTML = ""; // 리스트 초기화
+  selectDateLable.innerHTML = `${month + 1}월 ${date}일`;
 
   // 선택한 날짜가 이미 선택돼 있는지 판단
   if (!targetDateDiv.classList.contains("active")) {
@@ -64,6 +94,24 @@ function getEvent(year, month, date) {
       month: month,
       date: date,
     };
+  }
+
+  for (var dayoffIndex = 0; dayoffIndex < HoliDays.length; dayoffIndex++) {
+    const dateNum = Number(HoliDays[dayoffIndex].dateString.slice(-2));
+    if (selectedDate.getDate() == dateNum) {
+      planListUl.innerHTML += `<li><div class="plan-list-item"><span class="plan-item-color" style="background-color: red"></span><span class="plan-item-lable">${HoliDays[dayoffIndex].dateName}</span></div></li>`;
+    }
+  }
+
+  for (var index = 0; index < userPlanObj.length; index++) {
+    const planStart = new Date(userPlanObj[index].planTimeStart);
+    const planEnd = new Date(userPlanObj[index].planTimeEnd);
+    planStart.setHours(0, 0, 0, 0);
+    planEnd.setHours(0, 0, 0, 0);
+
+    if (selectedDate >= planStart && selectedDate <= planEnd) {
+      planListUl.innerHTML += `<li><div class="plan-list-item"><span class="plan-item-color" style="background-color: ${userPlanObj[index].planColor}"></span><span class="plan-item-lable">${userPlanObj[index].planTitle}</span></div></li>`;
+    }
   }
 }
 
@@ -139,7 +187,7 @@ function createCalendar(year, month) {
         // 이전 달의 날짜
       } else if (date <= lastDate) {
         // 현재 달의 날짜
-        tableCell.innerHTML = `<div id="date-${date}" class="cal-item${dayoffString}" onclick="getEvent(${year}, ${
+        tableCell.innerHTML = `<div id="date-${date}" class="cal-item${dayoffString}" onclick="getPlan(${year}, ${
           month - 1
         }, ${date})"><span class="date-num">${date}</span><div id="date-${date}-plan" class="plan-container"></div></div>`;
         date++;
@@ -199,12 +247,21 @@ function savePlan() {
     alert("일정 제목을 입력해주세요.");
     return;
   }
+
   if (!planTimeStart) {
     alert("일정 시작 시간을 입력해주세요.");
     return;
   }
+
   if (!planTimeEnd) {
     alert("일정 종료 시간을 입력해주세요.");
+    return;
+  }
+
+  const planStart = new Date(planTimeStart);
+  const planEnd = new Date(planTimeEnd);
+  if (planStart >= planEnd) {
+    alert("일정 시작과 종료 시간이 올바르지 않습니다.");
     return;
   }
 
