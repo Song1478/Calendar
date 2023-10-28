@@ -1,10 +1,10 @@
 const nowDate = new Date();
 const nowYear = nowDate.getFullYear();
 let currentMonth = nowDate.getMonth();
-window.onload = defineCalendar(nowYear, currentMonth + 1);
-
+let HoliDays = [];
 let selectedDay;
-let HoliDays;
+
+window.onload = defineCalendar(nowYear, currentMonth + 1);
 
 // 로컬 스토리지에서 데이터 마운트
 const userPlanString = localStorage.getItem(`userPlan`);
@@ -14,36 +14,30 @@ let userPlanObj = JSON.parse(userPlanString) || [];
 function refreshCalPlan() {
   const lastDay = new Date(nowYear, currentMonth + 1, 0).getDate(); // 해당 월의 마지막 날
 
-  for (var index = 0; index < userPlanObj.length; index++) {
-    const planStart = new Date(userPlanObj[index].planTimeStart);
-    const planEnd = new Date(userPlanObj[index].planTimeEnd);
+  // 달력 일정 가시화 초기화
+  for (var dayIndex = 1; dayIndex <= lastDay; dayIndex++) {
+    document.getElementById(`date-${dayIndex}-plan`).innerHTML = "";
+  }
 
-    // 지금 보고있는 월 페이지에 계획이 존재하는지?
-    if (currentMonth >= planStart.getMonth() && currentMonth <= planEnd.getMonth()) {
-      // 존재한다면 계획의 시작날과 끝날의 사이에 있는 달이라면?
-      if (currentMonth > planStart.getMonth() && currentMonth < planEnd.getMonth()) {
-        for (var dayIndex = 1; dayIndex <= lastDay; dayIndex++) {
-          const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
-          targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span>${userPlanObj[index].planTitle}</span></div>`;
-        }
+  // 공휴일 일정 등록
+  for (var dayoffIndex = 0; dayoffIndex < HoliDays.length; dayoffIndex++) {
+    const dateNum = Number(HoliDays[dayoffIndex].dateString.slice(-2));
+    document.getElementById(
+      `date-${dateNum}-plan`
+    ).innerHTML = `<div class="plan-item" style="box-shadow: 0 0 0 2px red inset"><span class="dayoff">${HoliDays[dayoffIndex].dateName}</span></div>`;
+  }
 
-        // 계획의 시작날이 현재 월 페이지에 존재하는가?
-      } else if (currentMonth == planStart.getMonth()) {
-        for (var dayIndex = 1; dayIndex <= lastDay; dayIndex++) {
-          if (dayIndex >= planStart.getDate()) {
-            const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
-            targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span>${userPlanObj[index].planTitle}</span></div>`;
-          }
-        }
+  // 사용자 일정 등록
+  for (var dayIndex = 1; dayIndex <= lastDay; dayIndex++) {
+    const nowDate = new Date(nowYear, currentMonth, dayIndex);
 
-        // 계획의 끝날이 현재 월 페이지에 존재하는가?
-      } else if (currentMonth == planEnd.getMonth()) {
-        for (var dayIndex = 1; dayIndex <= lastDay; dayIndex++) {
-          if (dayIndex <= planEnd.getDate()) {
-            const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
-            targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span>${userPlanObj[index].planTitle}</span></div>`;
-          }
-        }
+    for (var index = 0; index < userPlanObj.length; index++) {
+      const planStart = new Date(userPlanObj[index].planTimeStart);
+      const planEnd = new Date(userPlanObj[index].planTimeEnd);
+
+      if (nowDate >= planStart && nowDate <= planEnd) {
+        const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
+        targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span>${userPlanObj[index].planTitle}</span></div>`;
       }
     }
   }
@@ -79,6 +73,7 @@ function getEvent(year, month, date) {
  * @param {number} month 찾고자하는 달
  */
 function defineCalendar(year, month) {
+  // FIXME: 달력을 넘길때마다 API에 통신하는것 고쳐야함 (세션 스토리지에 가져왔던 데이터 저장)
   const parser = new DOMParser();
   const xhr = new XMLHttpRequest();
   const url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
@@ -91,7 +86,7 @@ function defineCalendar(year, month) {
     "A172v6vRQ4lqsLTzDqEUDszd%2BiLL5YuAC1%2F%2F57FwMuYKrmF7bxn4R2q4l%2B86cZuuspKxeAGRcwByTcXXCqWNAw%3D%3D";
   queryParams += "&" + encodeURIComponent("solYear") + "=" + encodeURIComponent(`${year}`); // 조회할 년도
   queryParams += "&" + encodeURIComponent("solMonth") + "=" + encodeURIComponent(`${month}`); // 조회할 달
-  console.log(url + queryParams);
+  console.log(`${month}월 - ${url + queryParams}`);
 
   xhr.open("GET", url + queryParams);
   xhr.onreadystatechange = function () {
@@ -106,8 +101,9 @@ function defineCalendar(year, month) {
           dateName: dateName,
         });
       }
+      HoliDays = holidayArray;
+      createCalendar(year, month);
     }
-    createCalendar(year, month, holidayArray);
   };
   xhr.send("");
 }
@@ -118,7 +114,7 @@ function defineCalendar(year, month) {
  * @param {number} month 생성하고자 하는 달
  * @param {Array} holidayArray defineCalendar 에서 가져온 휴일 배열
  */
-function createCalendar(year, month, holidayArray) {
+function createCalendar(year, month) {
   const calendar = document.getElementById("cal-items"); // 달력 DOM 객체
   const firstDay = new Date(year, month - 1, 1); // 해당 월의 첫번째 날
   const lastDay = new Date(year, month, 0); // 해당 월의 마지막 날
@@ -130,8 +126,6 @@ function createCalendar(year, month, holidayArray) {
   const totalWeeks = Math.ceil(totalDays / 7); // 해당 달에 몇주가 있는지 계산
 
   let date = 1;
-
-  HoliDays = holidayArray;
 
   calendar.innerHTML = ""; // 초기화
 
@@ -156,13 +150,17 @@ function createCalendar(year, month, holidayArray) {
     }
     calendar.appendChild(tableRow);
   }
-  for (var i = 0; i < holidayArray.length; i++) {
-    const dateNum = Number(holidayArray[i].dateString.slice(-2));
+  for (var i = 0; i < HoliDays.length; i++) {
+    const dateNum = Number(HoliDays[i].dateString.slice(-2));
     document.getElementById(`date-${dateNum}`).classList.add("dayoff");
   }
   refreshCalPlan();
 }
 
+/**
+ * 달력 이전 달로 이동시키는 함수 (버튼)
+ * @returns
+ */
 function prevMonth() {
   if (currentMonth < 1) {
     return;
@@ -172,6 +170,10 @@ function prevMonth() {
   defineCalendar(nowYear, currentMonth + 1);
 }
 
+/**
+ * 달력 다음 달로 이동시키는 함수 (버튼)
+ * @returns
+ */
 function nextMonth() {
   if (currentMonth >= 11) {
     return;
@@ -181,6 +183,10 @@ function nextMonth() {
   defineCalendar(nowYear, currentMonth + 1);
 }
 
+/**
+ * 계획 추가 함수 (버튼)
+ * @returns
+ */
 function savePlan() {
   const planColor = document.getElementById("plan-color").value;
   const planTitle = document.getElementById("title-txt").value;
@@ -214,7 +220,6 @@ function savePlan() {
     planTimeEnd: planTimeEnd,
     planLocation: planLocation,
   };
-  console.log(Date(planTimeStart));
   userPlanObj.push(saveObj);
   refreshCalPlan();
 
