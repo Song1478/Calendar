@@ -37,7 +37,7 @@ function refreshCalPlan() {
 
       if (nowDate >= planStart && nowDate <= planEnd) {
         const targetDateCell = document.getElementById(`date-${dayIndex}-plan`);
-        targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span>${userPlanObj[index].planTitle}</span></div>`;
+        targetDateCell.innerHTML += `<div class="plan-item" style="box-shadow: 0 0 0 2px ${userPlanObj[index].planColor} inset"><span onclick="loadEvent(${index})">${userPlanObj[index].planTitle}</span></div>`;
       }
     }
   }
@@ -256,6 +256,27 @@ function savePlan() {
  
 
 }*/
+
+function loadEvent(index) {
+  //일정가시화로 추가된 span에 onclick추가하여 note div에 스토리지데이터 로드하는 함수호출
+
+  console.log(index);
+  let nTitle = document.getElementById("title-txt");
+  let nSubject = document.getElementById("subject");
+  let nLocation = document.getElementById("location-input");
+  let nTimeStart = document.getElementById("time-start");
+  let nTimeEnd = document.getElementById("time-end");
+
+  nTitle.value = userPlanObj[index].planTitle;
+  nSubject.value = userPlanObj[index].planSubject;
+  nLocation.value = userPlanObj[index].planLocation;
+  nTimeStart.value = userPlanObj[index].planTimeStart;
+  nTimeEnd.value = userPlanObj[index].planTimeEnd;
+
+  console.log(userPlanObj[index]);
+
+  console.log(nTimeEnd);
+}
 
 function accountCal() {
   //수입,지출 합계계산.
