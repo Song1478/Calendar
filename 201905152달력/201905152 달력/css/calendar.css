@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.outer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.calendar {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+}
+
+.month-nav-wrap {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.month-nav-btn {
+  display: block;
+  margin-right: 10px;
+  width: 0;
+  height: 0;
+  background-color: transparent;
+  border-right: 10px solid black;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-top: 10px solid transparent;
+  cursor: pointer;
+}
+
+.month-nav-btn.next-month {
+  transform: rotate(180deg);
+  margin-left: 10px;
+}
+
+#month-title {
+  font-family: "NanumSquareNeoHeavy";
+  font-size: 20px;
+  width: 140px;
+  text-align: center;
+}
+
+.cal-table {
+  border-collapse: collapse;
+}
+
+.cal-table thead tr td {
+  height: 35px;
+}
+
+.cal-table tbody tr td {
+  width: 80px;
+  height: 100px;
+  padding: 2px;
+}
+
+.cal-head {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+  font-family: "NanumSquareNeoBold";
+}
+
+.dayoff {
+  color: red;
+}
+
+.date-num {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  height: 30%;
+  width: 100%;
+}
+
+.cal-item {
+  padding: 4px;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  font-family: "NanumSquareNeo";
+  background-color: white;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.cal-item.active {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.cal-item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.plan-container {
+  display: flex;
+  box-sizing: border-box;
+  padding: 2px;
+  height: 70%;
+  width: 100%;
+  justify-content: start;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.plan-item {
+  width: 110%;
+  height: 4px;
+  padding: 2px;
+  border-radius: 2px;
+  background-color: white;
+  margin-bottom: 3px;
+  font-size: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: black;
+  transition: all 0.3s;
+}
+
+.plan-item:hover {
+  height: 22px;
+}
+
+.plan-item span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1px;
+}
