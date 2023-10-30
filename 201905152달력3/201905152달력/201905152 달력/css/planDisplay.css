@@ -1,0 +1,179 @@
+.note {
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 10px;
+  width: 500px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.list-contaner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#add-plan-btn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background-color: rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+#add-plan-btn::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 23px;
+  height: 3px;
+  border-radius: 1px;
+  background-color: #555;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+#add-plan-btn::before {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 23px;
+  height: 3px;
+  border-radius: 2px;
+  background-color: #555;
+  content: "";
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+#add-plan-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+}
+
+#delete-plan-btn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background-color: rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.4s;
+  background-color: white;
+  font-size: 25px;
+  color: rgb(255, 0, 0);
+  font-weight: 900;
+}
+
+#delete-plan-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+}
+/**/
+
+#allbtn {
+  position: absolute;
+  margin-left: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  bottom: 20px;
+  width: 150px;
+  height: 50px;
+  border-radius: 9px;
+  border: 1px solid #eee;
+  background-color: rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.4s;
+  background-color: white;
+  font-size: 18px;
+  color: rgb(255, 0, 0);
+  font-weight: 900;
+}
+
+#allbtn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+}
+/**/
+#select-date-lable {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: "NanumSquareNeoExtraBold";
+  padding-bottom: 20px;
+  font-size: 28px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+#plan-list {
+  list-style: none;
+  font-family: "NanumSquareNeoLight";
+  font-size: 20px;
+}
+#plan-list li {
+  margin-bottom: 4px;
+}
+
+.plan-list-item {
+  position: relative;
+  display: flex;
+  padding: 5px;
+  width: 89%;
+  justify-content: start;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.plan-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.plan-item-color {
+  display: block;
+  margin-right: 6px;
+  width: 7px;
+  height: 30px;
+  border-radius: 4px;
+}
+
+.deleteBtn {
+  display: none;
+  width: 10%;
+  background-color: white;
+  border: none;
+  border-radius: 90px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: red;
+  font-weight: bold;
+}
+.deleteBtn:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}

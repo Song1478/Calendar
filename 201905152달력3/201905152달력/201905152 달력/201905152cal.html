@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="css/calendar.css" rel="stylesheet" type="text/css" />
+    <link href="css/planDisplay.css" rel="stylesheet" type="text/css" />
+    <link href="css/planAddMordal.css" rel="stylesheet" type="text/css" />
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>송창준 | 달력</title>
+  </head>
+  <body>
+    <section class="outer-container">
+      <section class="calendar">
+        <div class="month-nav-wrap">
+          <span class="month-nav-btn prev-month" onclick="prevMonth()"></span>
+          <span id="month-title">2023년 10월</span>
+          <span class="month-nav-btn next-month" onclick="nextMonth()"></span>
+        </div>
+        <table class="cal-table">
+          <thead>
+            <tr>
+              <td><div class="cal-head dayoff">일</div></td>
+              <td><div class="cal-head">월</div></td>
+              <td><div class="cal-head">화</div></td>
+              <td><div class="cal-head">수</div></td>
+              <td><div class="cal-head">목</div></td>
+              <td><div class="cal-head">금</div></td>
+              <td><div class="cal-head">토</div></td>
+            </tr>
+          </thead>
+          <tbody id="cal-items"></tbody>
+        </table>
+      </section>
+
+      <section class="note" id="note-wrap">
+        <span id="add-plan-btn" title="일정 추가" onclick="isPlanAddModalVisible(true)"></span>
+        <span id="delete-plan-btn" title="일정 삭제" onclick="planDelete()"> ㅡ </span>
+        <span id="allbtn" title="전체 삭제" onclick="planClear()"> Reset </span>
+        <span id="select-date-lable">날짜를 선택해주세요</span>
+        <ul id="plan-list"></ul>
+      </section>
+    </section>
+
+    <section id="plan-add-modal-wrap" style="display: none">
+      <div class="note-container">
+        <div id="note-div">
+          <div class="title-wrap">
+            <input id="title-txt" placeholder="제목" required />
+            <input id="plan-color" class="color-picker" type="color" />
+          </div>
+          <textarea id="subject" class="subject-area" placeholder="일정 내용" required></textarea>
+          <div class="time-wrap">
+            <input class="time-input" id="time-start" type="datetime-local" /> ~<br />
+            <input class="time-input" id="time-end" type="datetime-local" />
+          </div>
+          <div class="location-wrap">
+            <span class="location-label">장소</span>
+            <textarea id="location-input" placeholder="장소"></textarea>
+          </div>
+          <div class="btn-wrap" id="bwrap">
+            <input id="exit-modal" class="modal-btn" type="button" value="취소" onclick="isPlanAddModalVisible(false)" />
+            <input id="regist-plan" class="modal-btn" type="button" value="등록" onclick="savePlan()" />
+          </div>
+          <br />
+          <div class="btn-wrap2" id="bwrap2">
+            <input id="exit-modal" class="modal-btn" type="button" value="취소" onclick="isPlanAddModalVisible(false)" />
+            <input id="fix-plan" class="modal-btn" type="button" value="수정" />
+          </div>
+          <hr />
+        </div>
+        <div id="accBook">
+          <span>소득</span><input id="plus" />
+          <select id="plus-sel">
+            <option value="job">급여</option>
+            <option value="petc">기타</option>
+          </select>
+          <br />
+          <span>지출</span><input id="minus" />
+          <select id="minus-sel">
+            <option value="food">식비</option>
+            <option value="trffic">교통비</option>
+            <option value="leisure">여가생활</option>
+            <option value="metc">기타</option>
+          </select>
+          <br />
+          <input id="registacc" type="button" value="등록" />
+        </div>
+      </div>
+    </section>
+  </body>
+  <!-- 가계부 날짜별 소득,지출 -> 마지막에 합산 계. if시간이 남는다면 -> 지출별,소득별 카테고리. -->
+
+  <script src="js/index.js"></script>
+</html>
